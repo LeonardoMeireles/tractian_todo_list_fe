@@ -1,0 +1,21 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.App {
+    min-height: 100vh;
+    min-width: 100vw;
+    display: flex;
+    color: #282828;
+    overflow: hidden;
+}
+
+.page {
+    width: 100%;
+    display: flex;
+    background: #eeeeee;
+    overflow: hidden;
+}

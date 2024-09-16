@@ -1,0 +1,19 @@
+#search-bar-container {
+    height: fit-content;
+    max-width: 400px;
+    display: flex;
+    flex-direction: row;
+    margin: 1em 0 1.5em 0;
+    align-items: center;
+    gap: 8px;
+}
+
+#filter-container {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #0066FF;
+    cursor: pointer;
+}

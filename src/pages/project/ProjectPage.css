@@ -1,0 +1,13 @@
+#project-page {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #FFF;
+    overflow: hidden;
+    padding: 1.5em;
+}
+
+#all-task-container {
+    display: flex;
+    flex-direction: column;
+}
