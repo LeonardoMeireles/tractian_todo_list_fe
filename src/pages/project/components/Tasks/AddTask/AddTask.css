@@ -1,0 +1,19 @@
+.add-task-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#add-task-container {
+    width: fit-content;
+    color: #3C3B4966;
+}
+
+#add-task-container:hover {
+    color: #00AFBF;
+}
+
+.task-form-input {
+    margin: 0;
+    font-size: 1rem;
+}

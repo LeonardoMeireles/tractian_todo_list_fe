@@ -1,20 +1,23 @@
 import { ProjectService } from '../../services/project-service';
 import { NewTaskDto } from '../../types/redux-types';
 
-export const getProjectInfo: any = (projectId: string) => (dispatch: any) => {
+export const getProjectInfo: any = (projectId: string, search?: string, completed?: boolean, pending?: boolean) => (dispatch: any) => {
   dispatch({
-    type: 'PROJECT_INFO_REQUESTED'
+    type: 'GET_PROJECT_INFO_REQUESTED',
   });
-  return ProjectService.getProjectTasks(projectId)
+  return ProjectService.getProjectTasks(projectId, search, completed, pending)
     .then((res) => {
       dispatch({
-        type: 'PROJECT_INFO_SUCCESS',
-        payload: res.data,
+        type: 'GET_PROJECT_INFO_SUCCESS',
+        payload: {
+          projectInfo: res.data,
+          activeSearchInput: search,
+        },
       });
     })
     .catch((err) => {
       dispatch({
-        type: 'PROJECT_INFO_ERROR',
+        type: 'GET_PROJECT_INFO_ERROR',
         payload: err,
       });
     });
@@ -55,11 +58,29 @@ export const updateTaskStatus: any = (task: Task) => (dispatch: any) => {
 };
 
 export const updateTaskTitle: any = (task: Task, newTitle: string) => (dispatch: any) => {
-  return ProjectService.updateTaskTitle(task, newTitle)
+  task.title = newTitle;
+  return ProjectService.updateTaskData(task)
     .then((res) => {
       dispatch({
         type: 'UPDATE_TASK_TITLE_SUCCESS',
         payload: res.data,
+      });
+    });
+};
+
+export const updateTaskParent: any = (task: Task, newParentId: string) => (dispatch: any) => {
+  const updatedTask = {
+    ...task,
+    parentTaskId: newParentId,
+  };
+  return ProjectService.updateTaskData(updatedTask)
+    .then(() => {
+      dispatch({
+        type: 'UPDATE_TASK_PARENT_SUCCESS',
+        payload: {
+          oldTask: task,
+          updatedTask
+        },
       });
     });
 };

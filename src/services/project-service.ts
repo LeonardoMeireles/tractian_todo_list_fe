@@ -3,8 +3,17 @@ import { NewTaskDto } from '../types/redux-types';
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-async function getProjectTasks(projectId: string) {
-  return await axios.get(`${BASE_URL}/task/project/${projectId}`);
+async function getProjectTasks(projectId: string, search?: string, completed?: boolean, pending?: boolean) {
+  const params: Record<string, any> = {search};
+  if (completed !== pending) {
+    params['completedFilter'] = completed;
+  }
+  return await axios.get(
+    `${BASE_URL}/task/project/${projectId}`,
+    {
+      params
+    }
+  );
 }
 
 async function createNewTask(newTask: NewTaskDto) {
@@ -18,13 +27,10 @@ async function deleteTask(taskId: string) {
   return await axios.delete(`${BASE_URL}/task/${taskId}`);
 }
 
-async function updateTaskTitle(updatedTask: Task, newTitle: string) {
+async function updateTaskData(updatedTask: Task) {
   return await axios.patch(
     `${BASE_URL}/task`,
-    {
-      ...updatedTask,
-      title: newTitle
-    }
+    updatedTask
   );
 }
 
@@ -42,7 +48,7 @@ async function updateTaskStatus(updatedTask: Task) {
 export const ProjectService = {
   getProjectTasks,
   updateTaskStatus,
-  updateTaskTitle,
+  updateTaskData,
   createNewTask,
   deleteTask
 };

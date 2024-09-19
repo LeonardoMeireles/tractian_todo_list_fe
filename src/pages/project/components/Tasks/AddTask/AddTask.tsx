@@ -1,10 +1,11 @@
-import './Task.css';
-import AddTaskIcon from '../../../../assets/Icons/TaskIcons/AddTask.svg';
+import '../Task.css';
+import './AddTask.css';
+import AddTaskIcon from '../../../../../assets/Icons/TaskIcons/AddTask.svg';
 import { useState } from 'react';
 import AddTaskForm from './AddTaskForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../redux';
-import { createNewTask } from '../../../../redux/actions/project-action';
+import { RootState } from '../../../../../redux';
+import { createNewTask } from '../../../../../redux/actions/project-action';
 
 function AddTask() {
   const dispatch = useDispatch();
@@ -12,14 +13,15 @@ function AddTask() {
   const projectId: string | undefined = useSelector((state: RootState) => {
     return state.project.selectedProject?._id;
   });
+
   function onCompleteClick(newTaskTitle: string) {
     setAddNewTask(false);
     const newTask = {
       title: newTaskTitle,
       projectId,
       parentTaskId: null,
-    }
-    dispatch(createNewTask(newTask))
+    };
+    dispatch(createNewTask(newTask));
   }
 
   return (

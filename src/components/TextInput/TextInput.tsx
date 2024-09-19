@@ -7,6 +7,8 @@ interface TextInputProps {
   padding: string,
   inputValue?: string | number,
   onChange?: (value: string) => void,
+  onBlur?: (value: string) => void,
+  onEnter?: (value: string) => void,
   required?: boolean,
   type?: string
 }
@@ -19,6 +21,8 @@ function TextInput(
     padding,
     inputValue,
     onChange,
+    onBlur,
+    onEnter,
     required = false,
     type = 'text',
   }: TextInputProps
@@ -30,6 +34,12 @@ function TextInput(
         value={inputValue}
         onChange={(e) => {
           if (onChange) onChange(e.target.value);
+        }}
+        onBlur={(e) => {
+          if (onBlur) onBlur(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (onEnter && e.key === 'Enter') onEnter((e.target as HTMLInputElement).value);
         }}
         style={{
           minHeight,

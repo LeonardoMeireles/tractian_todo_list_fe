@@ -15,3 +15,11 @@ export interface NewTaskDto {
   projectId: string,
   parentTaskId: string | null,
 }
+
+export interface TaskFilter {
+  searchInput: string | null,
+  status: {
+    completed: boolean,
+    pending: boolean,
+  }
+}
