@@ -28,3 +28,17 @@ select, select:focus {
     align-items: center;
     gap: 8px;
 }
+
+@media (max-width: 475px) {
+    select, select:focus {
+        font-size: 0.825rem;
+    }
+
+    .header-container {
+        font-size: 0.825em;
+    }
+
+    #logged-in-message {
+        display: none;
+    }
+}

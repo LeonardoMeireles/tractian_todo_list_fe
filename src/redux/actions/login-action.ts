@@ -7,8 +7,8 @@ export const loginToApp: any = (loginInfo: LoginInfo, navigate: NavigateFunction
     type: 'LOGIN_REQUESTED'
   });
   return LoginService.getUserInfo(loginInfo)
-    .then((res) => {
-      const user: User = res.data;
+    .then((userRes) => {
+      const user: User = userRes;
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: user,
@@ -22,7 +22,15 @@ export const loginToApp: any = (loginInfo: LoginInfo, navigate: NavigateFunction
     });
 };
 
-export const logout: any = (navigate: NavigateFunction) => (dispatch: any) => {
+export const loadCachedUser: any = (user: User) => (dispatch: any) => {
+  dispatch({
+    type: 'LOAD_CACHED_USER',
+    payload: user
+  });
+};
+
+export const logout: any = () => (dispatch: any) => {
+  localStorage.setItem('user', '');
   dispatch({
     type: 'LOGOUT'
   });

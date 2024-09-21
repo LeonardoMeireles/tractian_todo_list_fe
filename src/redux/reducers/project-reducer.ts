@@ -5,11 +5,13 @@ interface ProjectReducer {
   selectedProject: Project | null,
   projectInfoState: { lifeCycle: LifeCycle },
   appliedFilter: TaskFilter,
+  invalidTaskDrop: string[],
 }
 
 const initState: ProjectReducer = {
   selectedProject: null,
   projectInfoState: {lifeCycle: LifeCycle.NONE},
+  invalidTaskDrop: [],
   appliedFilter: {
     searchInput: null,
     status: {
@@ -61,13 +63,26 @@ const reducer = createReducer(initState, {
     const updatedTask = action.payload;
     state.selectedProject!.tasks.entities[updatedTask._id] = updatedTask;
   },
+  START_TASK_DRAG(state: ProjectReducer, action: AnyAction) {
+    state.invalidTaskDrop = action.payload;
+  },
+  TASK_DRAG_CANCEL(state: ProjectReducer) {
+    state.invalidTaskDrop = [];
+  },
   UPDATE_TASK_PARENT_SUCCESS(state: ProjectReducer, action: AnyAction) {
     const {updatedTask, oldTask} = action.payload;
-    console.log();
+    state.invalidTaskDrop = [];
     state.selectedProject!.tasks.entities[updatedTask._id] = updatedTask;
     const hierarchy = state.selectedProject!.tasks.hierarchy;
     hierarchy[oldTask.parentTaskId ?? 'root'] = hierarchy[oldTask.parentTaskId ?? 'root'].filter((taskId) => taskId !== oldTask._id);
-    hierarchy[updatedTask.parentTaskId ?? 'root'].unshift(updatedTask._id);
+    if (updatedTask.parentTaskId && !hierarchy[updatedTask.parentTaskId]) {
+      hierarchy[updatedTask.parentTaskId] = [updatedTask._id];
+    } else {
+      hierarchy[updatedTask.parentTaskId ?? 'root'].splice(updatedTask.order, 0, updatedTask._id);
+    }
+  },
+  UPDATE_TASK_PARENT_ERROR(state: ProjectReducer) {
+    state.invalidTaskDrop = [];
   },
 });
 

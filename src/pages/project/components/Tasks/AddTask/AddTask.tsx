@@ -48,7 +48,7 @@ function AddTask() {
               onCompleteClick={(newTaskTitle) => onCompleteClick(newTaskTitle)}
               onCancelClick={() => setAddNewTask(false)}
             />
-            : <p id={'task-title'}>Add new task</p>
+            : <p className={'task-title'}>Add new task</p>
         }
       </div>
     </div>

@@ -30,6 +30,7 @@ function SearchBar() {
   return (
     <div id={'search-bar-container'}>
       <img
+        id={'search-icon'}
         style={{cursor: 'pointer'}}
         onClick={() => handleInputSearch()}
         width={16}
@@ -43,7 +44,6 @@ function SearchBar() {
         onBlur={() => handleInputSearch()}
         onEnter={() => handleInputSearch()}
         padding={'0.5em'}
-        minHeight={'1em'}
         name={'searchInput'}
         placeholder={'Search'}
       />

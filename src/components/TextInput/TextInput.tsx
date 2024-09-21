@@ -3,7 +3,7 @@ import './TextInput.css';
 interface TextInputProps {
   name: string,
   placeholder: string,
-  minHeight: string,
+  minHeight?: string,
   padding: string,
   inputValue?: string | number,
   onChange?: (value: string) => void,
@@ -31,6 +31,7 @@ function TextInput(
   return (
     <div className={'input-container'}>
       <input
+        className={'text-input'}
         value={inputValue}
         onChange={(e) => {
           if (onChange) onChange(e.target.value);

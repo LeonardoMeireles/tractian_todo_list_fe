@@ -17,3 +17,15 @@
     margin: 0;
     font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+    .task-form-input {
+        font-size: 0.825rem;
+    }
+}
+
+@media (max-width: 475px) {
+    .task-form-input {
+        font-size: 0.75em;
+    }
+}

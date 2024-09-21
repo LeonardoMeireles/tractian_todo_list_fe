@@ -33,7 +33,6 @@ function Task(
     setEditMode(true);
   }
 
-
   const {
     attributes,
     listeners,
@@ -74,8 +73,7 @@ function Task(
         : null
       }
       <img
-        width={16}
-        height={16}
+        className={'task-status-icon'}
         onClick={(e) => {
           dispatch(updateTaskStatus(task));
         }}
@@ -103,7 +101,7 @@ function Task(
             alt={'Finish task edit icon'}
           />
         </>
-        : <p className={task.completed ? 'completed-task' : ''}>
+        : <p className={'task-title ' + (task.completed ? 'completed-task' : '')}>
           {task.title}
         </p>
       }

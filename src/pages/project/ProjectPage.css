@@ -1,5 +1,5 @@
 #project-page {
-    width: 100%;
+    max-width: 1536px;
     display: flex;
     flex-direction: column;
     background: #FFF;
@@ -11,4 +11,46 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+/* 2xl */
+@media (max-width: 1536px) {
+    #project-page {
+        max-width: 1280px;
+    }
+}
+
+/* xl */
+@media (max-width: 1280px) {
+    #project-page {
+        max-width: 1024px;
+    }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+    #project-page {
+        max-width: 768px;
+    }
+}
+
+/* md */
+@media (max-width: 768px) {
+    #project-page {
+        max-width: 640px;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+    #project-page {
+        max-width: 475px;
+    }
+}
+
+/* xs */
+@media (max-width: 475px) {
+    #project-page {
+        width: 100%;
+    }
 }

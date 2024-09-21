@@ -1,5 +1,5 @@
 import './Task.css';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import PendingTaskIcon from '../../../../assets/Icons/TaskIcons/PendingTask.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { createNewTask } from '../../../../redux/actions/project-action';
@@ -11,19 +11,25 @@ import Droppable from './DnD/Droppable';
 interface TaskProps {
   task: Task;
   taskLevel: number;
+  taskBeingDragged: string | null;
 }
 
 function TaskContainer(
   {
     task,
     taskLevel,
+    taskBeingDragged,
   }: TaskProps
 ) {
   const dispatch = useDispatch();
   const projectData: Project | null = useSelector((state: RootState) => {
     return state.project.selectedProject;
   });
+  const invalidTaskDrop: string[] = useSelector((state: RootState) => {
+    return state.project.invalidTaskDrop;
+  });
   const [addSubtask, setAddSubtask] = useState<boolean>(false);
+  const disabledDroppable = invalidTaskDrop.includes(task._id);
 
   function handleAddNewSubtask(subtaskTitle: string) {
     setAddSubtask(false);
@@ -39,19 +45,20 @@ function TaskContainer(
     <div
       className={'task-container'}
       style={{
-        paddingLeft: `${taskLevel ? 1.5 : 0}em`,
+        marginLeft: `${taskLevel ? 1.5 : 0}em`,
       }}
     >
-      <Droppable id={task._id}>
-        <Task task={task} setAddSubtask={setAddSubtask}/>
-      </Droppable>
+      <Task task={task} setAddSubtask={setAddSubtask}/>
+      {taskBeingDragged && <Droppable disabled={disabledDroppable} id={task._id}/>}
       <div className={'sub-task-container'}>
+        {taskBeingDragged &&
+            <Droppable marginLeft={'2.5em'} disabled={disabledDroppable} id={task._id + '-subtask'}/>}
         {
           addSubtask
             ? <div
               className={'parent-task-container normal-task-container'}
               style={{
-                paddingLeft: `${taskLevel ? 1.5 : 0}em`,
+                marginLeft: `${1.5}em`,
                 marginTop: '0.75em'
               }}
             >
@@ -72,6 +79,7 @@ function TaskContainer(
         {
           projectData!.tasks.hierarchy[task._id]?.map((subtaskId: string) => {
             return <TaskContainer
+              taskBeingDragged={taskBeingDragged}
               key={subtaskId}
               task={projectData!.tasks.entities[subtaskId]}
               taskLevel={taskLevel + 1}
@@ -83,4 +91,4 @@ function TaskContainer(
   );
 }
 
-export default TaskContainer;
+export default memo(TaskContainer);

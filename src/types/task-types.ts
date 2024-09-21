@@ -14,7 +14,7 @@ interface Project extends ProjectData {
 interface Task {
   _id: string,
   title: string,
-  parentTaskId: string,
+  parentTaskId: string | null,
   projectId: string,
   completed: boolean,
   createdAt: Date,

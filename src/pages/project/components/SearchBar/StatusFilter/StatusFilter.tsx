@@ -9,6 +9,7 @@ import { getProjectInfo } from '../../../../../redux/actions/project-action';
 
 function StatusFilter() {
   const filterOptionsRef: MutableRefObject<any> = useRef();
+  const filterToggleRef: MutableRefObject<any> = useRef();
   const dispatch = useDispatch();
   const {projectId} = useParams();
   const searchInput = useSelector((state: RootState) => {
@@ -29,12 +30,20 @@ function StatusFilter() {
   }, [projectId]);
 
   //Close option dropdown if clicked outside div
-  function useOnClickOutside(ref: MutableRefObject<any>, handler: () => void) {
+  function useOnClickOutside(
+    filterToggleRef: MutableRefObject<any>,
+    optionRef: MutableRefObject<any>,
+    handler: () => void
+  ) {
     useEffect(
       () => {
         const listener = (event: any) => {
-          // Do nothing if clicking ref's element or descendent elements
-          if (!ref.current || ref.current.contains(event.target)) {
+          // Do nothing if clicking toggle or options
+          if (
+            !optionRef.current ||
+            optionRef.current.contains(event.target) ||
+            filterToggleRef.current.contains(event.target)
+          ) {
             return;
           }
           handler();
@@ -46,17 +55,17 @@ function StatusFilter() {
           document.removeEventListener('touchstart', listener);
         };
       },
-      [ref, handler]
+      [optionRef, handler]
     );
   }
 
-  useOnClickOutside(filterOptionsRef, () => setShowFilterOptions(false));
+  useOnClickOutside(filterToggleRef, filterOptionsRef, () => setShowFilterOptions(false));
 
   return (
     <div id={'filter-container'}>
-      <div id={'filter-button'} onClick={() => setShowFilterOptions(!showFilterOptions)}>
+      <div ref={filterToggleRef} id={'filter-button'} onClick={() => setShowFilterOptions(!showFilterOptions)}>
         <img width={16} height={16} src={FilterIcon} alt={'Search Icon'}/>
-        <p>Filter by status</p>
+        <p id={'filter-text'}>Filter by status</p>
       </div>
       {
         showFilterOptions

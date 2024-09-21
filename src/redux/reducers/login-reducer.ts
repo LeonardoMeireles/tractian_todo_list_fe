@@ -14,6 +14,12 @@ const initState: LoginReducer = {
 
 const reducer = (state: LoginReducer = initState, action: AnyAction) => {
   switch (action.type) {
+    case 'LOAD_CACHED_USER': {
+      return {
+        ...state,
+        user: action.payload,
+      };
+    }
     case 'LOGIN_REQUESTED': {
       return {
         ...state,

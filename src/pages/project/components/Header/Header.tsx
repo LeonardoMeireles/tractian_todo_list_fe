@@ -40,8 +40,8 @@ function Header(
           })}
         </select>
       </div>
-      <div className={'section-container'}>
-        <p>Logged in Todoist</p>
+      <div className={'section-container logout-container'}>
+        <p id={'logged-in-message'}>Logged in Todoist</p>
         <p
           id={'logout-button'}
           onClick={() => {
