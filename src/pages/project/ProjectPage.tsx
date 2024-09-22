@@ -1,7 +1,6 @@
 import './ProjectPage.css';
 import '../../App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../redux';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProjectInfo } from '../../redux/actions/project-action';
@@ -12,9 +11,6 @@ import AllTaskContainer from './components/AllTaskContainer';
 function ProjectPage() {
   const {projectId} = useParams();
   const dispatch = useDispatch();
-  const projectData: Project | null = useSelector((state: RootState) => {
-    return state.project.selectedProject;
-  });
 
   useEffect(() => {
     dispatch(getProjectInfo(projectId));
@@ -22,7 +18,7 @@ function ProjectPage() {
 
   return (
     <div className={'page'} id={'project-page'}>
-      <Header selectedProject={projectData}/>
+      <Header/>
       <SearchBar/>
       <AllTaskContainer/>
     </div>

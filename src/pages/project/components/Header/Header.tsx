@@ -2,17 +2,10 @@ import './Header.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux';
 import { logout } from '../../../../redux/actions/login-action';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-interface HeaderProps {
-  selectedProject: Project | null;
-}
-
-function Header(
-  {
-    selectedProject
-  }: HeaderProps
-) {
+function Header() {
+  const { projectId } = useParams();
   const userProjects = useSelector((state: RootState) => {
     return state.login.user?.projects ?? [];
   });
@@ -25,7 +18,7 @@ function Header(
         <p id={'project-label'}>Project:</p>
         <select
           style={{cursor: 'pointer'}}
-          value={selectedProject?._id}
+          value={projectId}
           onChange={(e) => {
             navigate(`/project/${e.target.value}`);
           }}
