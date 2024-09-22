@@ -24,6 +24,7 @@ function RoutingProvider() {
       }
       navigate('/login');
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, user]);
 
   return (

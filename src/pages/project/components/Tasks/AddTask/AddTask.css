@@ -13,6 +13,11 @@
     color: #00AFBF;
 }
 
+#add-task-icon {
+    height: 1em;
+    width: 1em;
+}
+
 .task-form-input {
     margin: 0;
     font-size: 1rem;
@@ -25,7 +30,13 @@
 }
 
 @media (max-width: 475px) {
+    #add-task-icon {
+        width: 0.825em;
+        height: 0.825em;
+    }
+
     .task-form-input {
+        width: 50%;
         font-size: 0.75em;
     }
 }

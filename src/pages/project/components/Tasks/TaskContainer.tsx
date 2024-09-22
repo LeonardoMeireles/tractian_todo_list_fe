@@ -52,7 +52,7 @@ function TaskContainer(
       {taskBeingDragged && <Droppable disabled={disabledDroppable} id={task._id}/>}
       <div className={'sub-task-container'}>
         {taskBeingDragged &&
-            <Droppable marginLeft={'2.5em'} disabled={disabledDroppable} id={task._id + '-subtask'}/>}
+            <Droppable width={'100vw'} marginLeft={'2.5em'} disabled={disabledDroppable} id={task._id + '-subtask'}/>}
         {
           addSubtask
             ? <div
@@ -63,8 +63,7 @@ function TaskContainer(
               }}
             >
               <img
-                width={16}
-                height={16}
+                className={'task-icon'}
                 style={{marginLeft: '1.5em'}}
                 src={PendingTaskIcon}
                 alt={'New subtask icon'}

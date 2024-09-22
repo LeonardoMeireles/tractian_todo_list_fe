@@ -36,8 +36,7 @@ function AddTask() {
         }}
       >
         <img
-          width={16}
-          height={16}
+          id={'add-task-icon'}
           src={AddTaskIcon}
           style={{marginLeft: '1.5em'}}
           alt={'Add Tasks Icon'}

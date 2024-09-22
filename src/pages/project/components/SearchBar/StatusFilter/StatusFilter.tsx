@@ -55,7 +55,7 @@ function StatusFilter() {
           document.removeEventListener('touchstart', listener);
         };
       },
-      [optionRef, handler]
+      [optionRef, filterToggleRef, handler]
     );
   }
 

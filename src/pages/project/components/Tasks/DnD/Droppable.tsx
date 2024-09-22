@@ -6,6 +6,7 @@ import '../Task.css';
 type DroppableProps = {
   disabled: boolean
   marginLeft?: string,
+  width?: string,
   children?: React.ReactNode,
   id: string;
 };
@@ -15,6 +16,7 @@ export function Droppable(
     disabled,
     children,
     marginLeft = '1em',
+    width = '25px',
     id,
   }: DroppableProps
 ) {
@@ -34,7 +36,7 @@ export function Droppable(
       <div
         ref={setNodeRef}
         style={{
-          width: '100vw',
+          width,
           position: 'absolute',
           zIndex: 1,
           ...disabled ? {} : style

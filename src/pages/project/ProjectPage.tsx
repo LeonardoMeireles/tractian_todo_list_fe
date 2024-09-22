@@ -2,101 +2,29 @@ import './ProjectPage.css';
 import '../../App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { dragCancel, getProjectInfo, startDrag, updateTaskParent } from '../../redux/actions/project-action';
+import { getProjectInfo } from '../../redux/actions/project-action';
 import Header from './components/Header/Header';
 import SearchBar from './components/SearchBar/SearchBar';
-import AddTask from './components/Tasks/AddTask/AddTask';
-import TaskContainer from './components/Tasks/TaskContainer';
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  useDroppable
-} from '@dnd-kit/core';
-import Task from './components/Tasks/Task';
-import Droppable from './components/Tasks/DnD/Droppable';
+import AllTaskContainer from './components/AllTaskContainer';
 
 function ProjectPage() {
   const {projectId} = useParams();
   const dispatch = useDispatch();
-  const [taskBeingDragged, setTaskBeingDragged] = useState<null | string>(null);
   const projectData: Project | null = useSelector((state: RootState) => {
     return state.project.selectedProject;
-  });
-  const draggedTask = taskBeingDragged && projectData ? projectData.tasks.entities[taskBeingDragged] : null;
-  const {setNodeRef} = useDroppable({
-    id: 'root',
   });
 
   useEffect(() => {
     dispatch(getProjectInfo(projectId));
   }, [projectId, dispatch]);
 
-  const handleDragStart = ({active}: DragStartEvent) => {
-    if (!projectData) return;
-
-    setTaskBeingDragged(active.id as string);
-    dispatch(startDrag(projectData.tasks.hierarchy, active.id));
-  };
-
-  const handleDragEnd = ({active, over}: DragEndEvent) => {
-    setTaskBeingDragged(null);
-    if (!projectData || !over || active.id === over.id) return dispatch(dragCancel());
-
-    const task = projectData?.tasks.entities[active.id];
-    let newOrder: number;
-    if (over.id === 'root-top' || over.id === 'root-bottom') {
-      newOrder = over.id === 'root-bottom' ? projectData?.tasks.hierarchy['root'].length : 0;
-      over.id = 'root';
-      return dispatch(updateTaskParent(task, over.id, newOrder));
-    }
-
-    let newParentTaskId: string;
-    if ((over.id as string).includes('-subtask')) {
-      newParentTaskId = (over.id as string).split('-')[0];
-      newOrder = 0;
-    } else {
-      const taskOver = projectData.tasks.entities[over.id];
-      newParentTaskId = taskOver.parentTaskId ?? 'root';
-      newOrder = projectData.tasks.hierarchy[newParentTaskId]
-        .findIndex((id: string) => id === taskOver._id) + 1;
-    }
-    dispatch(updateTaskParent(task, newParentTaskId, newOrder));
-  };
-
   return (
     <div className={'page'} id={'project-page'}>
       <Header selectedProject={projectData}/>
       <SearchBar/>
-      <div id={'all-task-container'}>
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <AddTask/>
-          {!!taskBeingDragged && <Droppable id={'root-top'} disabled={false}/>}
-          <div ref={setNodeRef}>
-            {projectData?.tasks?.hierarchy
-              ? projectData.tasks?.hierarchy?.root?.map((taskId: string) => {
-                return <TaskContainer
-                  taskBeingDragged={taskBeingDragged}
-                  taskLevel={0}
-                  key={taskId}
-                  task={projectData.tasks.entities[taskId]}
-                />;
-              })
-              : null
-            }
-          </div>
-          <Droppable id={'root-bottom'} disabled={false}/>
-          <DragOverlay style={{cursor: 'grabbing'}} dropAnimation={null}>
-            {draggedTask ? <Task task={draggedTask} dragOverlay={true}/> : null}
-          </DragOverlay>
-        </DndContext>
-      </div>
+      <AllTaskContainer/>
     </div>
   );
 }

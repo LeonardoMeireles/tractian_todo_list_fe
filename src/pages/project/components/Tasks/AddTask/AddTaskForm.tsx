@@ -33,8 +33,7 @@ function AddTaskForm(
         }}
       />
       <img
-        width={16}
-        height={16}
+        className={'task-icon'}
         onClick={() => {
           handleOnComplete(newTaskTitle);
         }}
@@ -43,8 +42,7 @@ function AddTaskForm(
         alt={'Finish task edit icon'}
       />
       <img
-        width={16}
-        height={16}
+        className={'task-icon'}
         onClick={() => {
           onCancelClick();
         }}

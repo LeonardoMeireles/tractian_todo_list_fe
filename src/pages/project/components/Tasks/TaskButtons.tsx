@@ -25,12 +25,11 @@ function TaskButtons(
         }}
       >
         <img
-          width={16}
-          height={16}
+          className={'task-icon'}
           src={EditTaskIcon}
           alt={'Edit Tasks Icon'}
         />
-        <p>
+        <p className={'task-button-text'}>
           Edit
         </p>
       </div>
@@ -41,13 +40,12 @@ function TaskButtons(
         }}
       >
         <img
-          width={16}
-          height={16}
+          className={'task-icon'}
           src={AddSubtaskIcon}
           alt={'Add Subtasks Icon'}
         />
-        <p>
-          Add subtask
+        <p className={'task-button-text'}>
+          Add Subtask
         </p>
       </div>
       <div
@@ -57,12 +55,11 @@ function TaskButtons(
         }}
       >
         <img
-          width={16}
-          height={16}
+          className={'task-icon'}
           src={DeleteTaskIcon}
           alt={'Edit Tasks Icon'}
         />
-        <p style={{color: '#EB0100'}}>
+        <p className={'task-button-text'} style={{color: '#EB0100'}}>
           Delete
         </p>
       </div>

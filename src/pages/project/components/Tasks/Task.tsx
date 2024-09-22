@@ -49,7 +49,6 @@ function Task(
 
   return (
     <div
-      ref={setNodeRef}
       className={'parent-task-container normal-task-container'}
       style={{
         marginTop: dragOverlay ? 0 : '0.75em',
@@ -63,6 +62,7 @@ function Task(
     >
       {!dragOverlay && taskHover
         ? <img
+          ref={setNodeRef}
           {...listeners}
           {...attributes}
           width={16}
@@ -73,7 +73,7 @@ function Task(
         : null
       }
       <img
-        className={'task-status-icon'}
+        className={'task-icon'}
         onClick={(e) => {
           dispatch(updateTaskStatus(task));
         }}
@@ -90,8 +90,7 @@ function Task(
             onChange={(e) => setEditInput(e.target.value)}
           />
           <img
-            width={16}
-            height={16}
+            className={'task-icon'}
             onClick={() => {
               if (task.title !== editInput) dispatch(updateTaskTitle(task, editInput));
               setEditMode(false);
