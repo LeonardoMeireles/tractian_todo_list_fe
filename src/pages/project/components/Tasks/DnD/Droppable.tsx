@@ -7,48 +7,56 @@ type DroppableProps = {
   disabled: boolean
   marginLeft?: string,
   width?: string,
-  children?: React.ReactNode,
   id: string;
 };
+
+interface DraggablePresentationProps {
+  isOver?: boolean;
+}
+
+const DroppablePresentation = React.memo((
+  {
+    isOver
+  }: DraggablePresentationProps
+) => {
+  return isOver
+    ? <>
+      <div className={'arrow-right'}/>
+      <div className={'arrow-line'}/>
+    </>
+    : null;
+});
 
 export function Droppable(
   {
     disabled,
-    children,
     marginLeft = '1em',
-    width = '25px',
+    width = '2em',
     id,
-  }: DroppableProps
+  }: DroppableProps,
 ) {
-  const {isOver, setNodeRef} = useDroppable({
+  const { isOver, setNodeRef } = useDroppable({
     id,
     disabled,
   });
   const style = {
     transition: 'padding-top 0.3s ease',
-    height: '20px',
+    height: '10px',
     left: marginLeft,
   };
 
   return (
-    <div style={{position: 'relative'}}>
-      {children}
+    <div style={{ position: 'relative' }}>
       <div
         ref={setNodeRef}
         style={{
           width,
           position: 'absolute',
           zIndex: 1,
-          ...disabled ? {} : style
+          ...disabled ? {} : style,
         }}
       >
-        {isOver
-          ? <>
-            <div className={'arrow-right'}/>
-            <div className={'arrow-line'}/>
-          </>
-          : null
-        }
+        <DroppablePresentation isOver={isOver}/>
       </div>
     </div>
   );

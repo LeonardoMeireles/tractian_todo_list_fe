@@ -1,26 +1,32 @@
 import { ProjectService } from '../../services/project-service';
 import { NewTaskDto } from '../../types/redux-types';
 import { getAllDescendants } from '../../utils/utils';
+import { TaskI } from '../../types/task-types';
 
-export const getProjectInfo: any = (projectId: string, search?: string, completed?: boolean, pending?: boolean) => (dispatch: any) => {
+export const getProjectInfo: any = (projectId: string, search?: string, completed?: boolean, pending?: boolean) => (dispatch: any, getState: any) => {
   dispatch({
     type: 'GET_PROJECT_INFO_REQUESTED',
+    payload: projectId,
   });
   return ProjectService.getProjectTasks(projectId, search, completed, pending)
     .then((res) => {
-      dispatch({
-        type: 'GET_PROJECT_INFO_SUCCESS',
-        payload: {
-          projectInfo: res.data,
-          activeSearchInput: search,
-        },
-      });
+      if(projectId === getState().project.projectInfoState.projectId) {
+        dispatch({
+          type: 'GET_PROJECT_INFO_SUCCESS',
+          payload: {
+            projectInfo: res.data,
+            activeSearchInput: search,
+          },
+        });
+      }
     })
     .catch((err) => {
-      dispatch({
-        type: 'GET_PROJECT_INFO_ERROR',
-        payload: err,
-      });
+      if(projectId === getState().project.projectInfoState.projectId) {
+        dispatch({
+          type: 'GET_PROJECT_INFO_ERROR',
+          payload: err,
+        });
+      }
     });
 };
 
@@ -34,7 +40,7 @@ export const createNewTask: any = (newTask: NewTaskDto) => (dispatch: any) => {
     });
 };
 
-export const deleteTask: any = (task: Task) => (dispatch: any) => {
+export const deleteTask: any = (task: TaskI) => (dispatch: any) => {
   return ProjectService.deleteTask(task._id)
     .then((res) => {
       dispatch({
@@ -48,7 +54,7 @@ export const deleteTask: any = (task: Task) => (dispatch: any) => {
     });
 };
 
-export const updateTaskStatus: any = (task: Task) => (dispatch: any) => {
+export const updateTaskStatus: any = (task: TaskI) => (dispatch: any) => {
   return ProjectService.updateTaskStatus(task)
     .then((res) => {
       dispatch({
@@ -58,9 +64,12 @@ export const updateTaskStatus: any = (task: Task) => (dispatch: any) => {
     });
 };
 
-export const updateTaskTitle: any = (task: Task, newTitle: string) => (dispatch: any) => {
-  task.title = newTitle;
-  return ProjectService.updateTaskData(task)
+export const updateTaskTitle: any = (task: TaskI, newTitle: string) => (dispatch: any) => {
+  const newTask = {
+    _id: task._id,
+    title: newTitle
+  };
+  return ProjectService.updateTaskTitle(newTask)
     .then((res) => {
       dispatch({
         type: 'UPDATE_TASK_TITLE_SUCCESS',
@@ -73,7 +82,10 @@ export const startDrag: any = (hierarchies: Record<string, string[]>, taskId: st
   const invalidTasks = getAllDescendants(hierarchies, taskId);
   dispatch({
     type: 'START_TASK_DRAG',
-    payload: invalidTasks,
+    payload: {
+      taskId,
+      invalidTasks
+    },
   });
 };
 
@@ -83,26 +95,32 @@ export const dragCancel: any = () => (dispatch: any) => {
   });
 };
 
-export const updateTaskParent: any = (task: Task, newParentId: string, newOrder: number) => (dispatch: any) => {
+export const updateTaskParent: any = (task: TaskI, newParentId: string, newOrder: number) => (dispatch: any) => {
   const updatedTask = {
     ...task,
     parentTaskId: newParentId === 'root' ? null : newParentId,
     order: newOrder,
   };
+  dispatch({
+    type: 'UPDATE_TASK_PARENT_REQUESTED',
+    payload: {
+      oldTask: task,
+      updatedTask
+    },
+  });
   return ProjectService.updateTaskData(updatedTask)
     .then(() => {
       dispatch({
         type: 'UPDATE_TASK_PARENT_SUCCESS',
-        payload: {
-          oldTask: task,
-          updatedTask
-        },
       });
     })
     .catch((e) => {
       dispatch({
         type: 'UPDATE_TASK_PARENT_ERROR',
-        payload: e,
+        payload: {
+          oldTask: task,
+          updatedTask
+        },
       });
     });
 };

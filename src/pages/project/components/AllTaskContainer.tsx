@@ -15,6 +15,7 @@ import {
 import Task from './Tasks/Task';
 import Droppable from './Tasks/DnD/Droppable';
 import { RootState } from '../../../redux';
+import { Project } from '../../../types/task-types';
 
 function AllTaskContainer() {
   const dispatch = useDispatch();
@@ -66,21 +67,20 @@ function AllTaskContainer() {
         onDragEnd={handleDragEnd}
       >
         <AddTask/>
-        {!!taskBeingDragged && <Droppable width={'50vw'} id={'root-top'} disabled={false}/>}
+        <Droppable width={'50vw'} id={'root-top'} disabled={false}/>
         <div ref={setNodeRef}>
           {projectData?.tasks?.hierarchy
             ? projectData.tasks?.hierarchy?.root?.map((taskId: string) => {
               return <TaskContainer
-                taskBeingDragged={taskBeingDragged}
                 taskLevel={0}
                 key={taskId}
-                task={projectData.tasks.entities[taskId]}
+                taskId={taskId}
               />;
             })
             : null
           }
         </div>
-        {!!taskBeingDragged && <Droppable id={'root-bottom'} disabled={false}/> }
+        <Droppable id={'root-bottom'} disabled={false}/>
         <DragOverlay style={{ cursor: 'grabbing' }} dropAnimation={null}>
           {draggedTask ? <Task task={draggedTask} dragOverlay={true}/> : null}
         </DragOverlay>

@@ -5,38 +5,42 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createNewTask } from '../../../../redux/actions/project-action';
 import { RootState } from '../../../../redux';
 import AddTaskForm from './AddTask/AddTaskForm';
-import Task from './Task';
 import Droppable from './DnD/Droppable';
+import Task from './Task';
+import {TaskI} from '../../../../types/task-types'
 
 interface TaskProps {
-  task: Task;
+  taskId: string;
   taskLevel: number;
-  taskBeingDragged: string | null;
 }
 
 function TaskContainer(
   {
-    task,
+    taskId,
     taskLevel,
-    taskBeingDragged,
   }: TaskProps
 ) {
   const dispatch = useDispatch();
-  const projectData: Project | null = useSelector((state: RootState) => {
-    return state.project.selectedProject;
+  const projectId: string | undefined = useSelector((state: RootState) => {
+    return state.project.selectedProject?._id;
   });
-  const invalidTaskDrop: string[] = useSelector((state: RootState) => {
-    return state.project.invalidTaskDrop;
+  const taskData: TaskI | undefined = useSelector((state: RootState) => {
+    return state.project.selectedProject!.tasks.entities[taskId];
+  });
+  const taskHierarchy: string[] | undefined = useSelector((state: RootState) => {
+    return state.project.selectedProject?.tasks.hierarchy[taskId];
+  });
+  const disabledDroppable: boolean = useSelector((state: RootState) => {
+    return state.project.invalidTaskDrop.includes(taskId);
   });
   const [addSubtask, setAddSubtask] = useState<boolean>(false);
-  const disabledDroppable = invalidTaskDrop.includes(task._id);
 
   function handleAddNewSubtask(subtaskTitle: string) {
     setAddSubtask(false);
     const newTask = {
       title: subtaskTitle,
-      projectId: projectData?._id,
-      parentTaskId: task._id,
+      projectId: projectId,
+      parentTaskId: taskId,
     };
     dispatch(createNewTask(newTask));
   }
@@ -48,11 +52,10 @@ function TaskContainer(
         marginLeft: `${taskLevel ? 1.5 : 0}em`,
       }}
     >
-      <Task task={task} setAddSubtask={setAddSubtask}/>
-      {taskBeingDragged && <Droppable disabled={disabledDroppable} id={task._id}/>}
+      <Task task={taskData} setAddSubtask={setAddSubtask}/>
+      <Droppable disabled={disabledDroppable} id={taskId}/>
       <div className={'sub-task-container'}>
-        {taskBeingDragged &&
-            <Droppable width={'100vw'} marginLeft={'2.5em'} disabled={disabledDroppable} id={task._id + '-subtask'}/>}
+        <Droppable width={'100vw'} marginLeft={'2.5em'} disabled={disabledDroppable} id={taskId + '-subtask'}/>
         {
           addSubtask
             ? <div
@@ -76,11 +79,10 @@ function TaskContainer(
             : null
         }
         {
-          projectData!.tasks.hierarchy[task._id]?.map((subtaskId: string) => {
+          taskHierarchy?.map((subtaskId: string) => {
             return <TaskContainer
-              taskBeingDragged={taskBeingDragged}
               key={subtaskId}
-              task={projectData!.tasks.entities[subtaskId]}
+              taskId={subtaskId}
               taskLevel={taskLevel + 1}
             />;
           })

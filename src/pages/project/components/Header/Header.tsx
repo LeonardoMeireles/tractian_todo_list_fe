@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../../redux';
 import { logout } from '../../../../redux/actions/login-action';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Project } from '../../../../types/task-types';
 
 function Header() {
   const { projectId } = useParams();
